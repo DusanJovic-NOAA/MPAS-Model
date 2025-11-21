@@ -388,6 +388,8 @@ target_compile_definitions(core_atmosphere PRIVATE ${CORE_ATMOSPHERE_COMPILE_DEF
 set_MPAS_DEBUG_flag(core_atmosphere)
 mpas_core_target(CORE atmosphere TARGET core_atmosphere INCLUDES ${ATMOSPHERE_CORE_INCLUDES})
 
+option(FETCH_MPAS_DATA "Fetch mpas_data" ON)
+if (FETCH_MPAS_DATA)
 #Get physics_wrf tables from MPAS-Data
 include(FetchContent)
 if (${PROJECT_VERSION} VERSION_GREATER_EQUAL 7.0)
@@ -411,6 +413,7 @@ foreach (data_file IN LISTS PHYSICS_WRF_DATA)
                     ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/core_atmosphere/${data_file})
 endforeach ()
 install(DIRECTORY ${PHYSICS_WRF_DATA_DIR}/ DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/core_atmosphere)
+endif() # FETCH_MPAS_DATA
 
 add_executable(mpas_atmosphere_build_tables ${ATMOSPHERE_CORE_UTILS_SOURCES})
 target_link_libraries(mpas_atmosphere_build_tables PUBLIC core_atmosphere)
