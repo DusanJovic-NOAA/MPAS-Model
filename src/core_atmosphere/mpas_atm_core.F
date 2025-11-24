@@ -625,7 +625,7 @@ module atm_core
       type (MPAS_Time_Type) :: currTime
       character(len=StrKIND) :: timeStamp
       character (len=StrKIND), pointer :: config_restart_timestamp_name
-      integer :: itimestep
+      integer, save :: itimestep = 1
       integer :: iounit
 
       integer :: stream_dir
@@ -648,6 +648,7 @@ module atm_core
       call mpas_pool_get_config(domain % blocklist % configs, 'config_do_restart', config_do_restart)
       call mpas_pool_get_config(domain % blocklist % configs, 'config_restart_timestamp_name', config_restart_timestamp_name)
 
+      if (itimestep == 1) then
       ! Avoid writing a restart file at the initial time
       call MPAS_stream_mgr_reset_alarms(domain % streamManager, streamID='restart', direction=MPAS_STREAM_OUTPUT, ierr=ierr)
 
@@ -704,6 +705,8 @@ module atm_core
 
       call mpas_stream_mgr_reset_alarms(domain % streamManager, direction=MPAS_STREAM_OUTPUT, ierr=ierr)
 
+      end if
+
       block_ptr => domain % blocklist
       call mpas_pool_get_subpool(block_ptr % structs, 'mesh', mesh)
       call mpas_pool_get_subpool(block_ptr % structs, 'state', state)
@@ -735,7 +738,6 @@ module atm_core
 
       ! During integration, time level 1 stores the model state at the beginning of the
       !   time step, and time level 2 stores the state advanced dt in time by timestep(...)
-      itimestep = 1
       do while (.not. mpas_is_clock_stop_time(clock))
 
          currTime = mpas_get_clock_time(clock, MPAS_NOW, ierr)
