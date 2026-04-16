@@ -97,6 +97,8 @@ set(ATMOSPHERE_CORE_PHYSICS_WRF_SOURCES
 list(TRANSFORM ATMOSPHERE_CORE_PHYSICS_WRF_SOURCES PREPEND physics/physics_wrf/)
 
 
+option(MPAS_CHECKOUT_EXTERNALS "Use checkout_externals tool to clone dependencies" ON)
+if (MPAS_CHECKOUT_EXTERNALS)
 set(CHECKOUT ${CMAKE_CURRENT_SOURCE_DIR}/tools/manage_externals/checkout_externals )
 execute_process( COMMAND
                  ${CHECKOUT} --externals ${CMAKE_CURRENT_SOURCE_DIR}/Externals.cfg
@@ -108,6 +110,7 @@ if ( ${MANAGE_EXTERNALS_STATUS} AND NOT ${MANAGE_EXTERNALS_STATUS} EQUAL 0 )
 else()
     message( STATUS "Finished checking out external repos via manage_externals" )
 endif()
+endif() # MPAS_CHECKOUT_EXTERNALS
 
 set(ATMOSPHERE_CORE_PHYSICS_MMM_SOURCES
     bl_gwdo.F90
