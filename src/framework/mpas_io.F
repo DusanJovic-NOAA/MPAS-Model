@@ -2794,6 +2794,7 @@ module mpas_io
          end if
       end if
 
+#ifdef MPAS_SMIOL_SUPPORT
 !      call mpas_log_write('Checking for error')
       if (local_ierr == MPAS_IO_ERR_INSUFFICIENT_BUF) then
          call MPAS_io_err_mesg(handle % ioContext, local_ierr, .false.)
@@ -2801,6 +2802,7 @@ module mpas_io
          if (present(ierr)) ierr = local_ierr
          return
       endif
+#endif
 
 #ifdef MPAS_PIO_SUPPORT
       if (pio_ierr /= PIO_noerr) then
