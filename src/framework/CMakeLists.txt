@@ -36,6 +36,10 @@ set(MPAS_FRAMEWORK_SOURCES
         xml_stream_parser.c
         stream_inquiry.c)
 
+if (MPAS_USE_SCOTCH)
+    list(APPEND MPAS_FRAMEWORK_SOURCES mpas_ptscotch_interface.F ptscotch_interface.c)
+endif()
+
 add_library(framework ${MPAS_FRAMEWORK_SOURCES})
 set_MPAS_DEBUG_flag(framework)
 set(FRAMEWORK_COMPILE_DEFINITIONS
@@ -51,6 +55,12 @@ else()
     set(IO_LIBS
         ${PROJECT_NAME}::external::smiolf)
 endif()
+if (MPAS_USE_SCOTCH)
+    list(APPEND FRAMEWORK_COMPILE_DEFINITIONS MPAS_SCOTCH)
+    set(SCOTCH_LIBS
+        SCOTCH::ptscotch
+        SCOTCH::ptscotcherr)
+endif()
 target_compile_definitions(framework PRIVATE ${FRAMEWORK_COMPILE_DEFINITIONS})
 
 mpas_fortran_target(framework)
@@ -62,6 +72,7 @@ set(FRAMEWORK_LINK_LIBRARIES
         ${PROJECT_NAME}::external::esmf
         ${PROJECT_NAME}::external::ezxml
         ${IO_LIBS}
+        ${SCOTCH_LIBS}
         PnetCDF::PnetCDF_Fortran
         MPI::MPI_Fortran)
 
