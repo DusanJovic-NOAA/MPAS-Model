@@ -469,9 +469,11 @@
 
        if(config_o3climatology) then
           !ozone mixing ratio:
+!$omp single
           do k = 1, num_oznLevels
              pin_p(k) = pin(k)
           enddo
+!$omp end single
           do j = jts,jte
           do k = 1, num_oznLevels
              do i = its,ite
@@ -501,9 +503,11 @@
           if(allocated(p2d))  deallocate(p2d)
           if(allocated(o32d)) deallocate(o32d)
        else
+!$omp single
           do k = 1, num_oznLevels
              pin_p(k) = 0.0_RKIND
           enddo
+!$omp end single
           do j = jts,jte
           do k = 1, num_oznLevels
              do i = its,ite
@@ -571,9 +575,11 @@
        endif
 
        !ozone mixing ratio:
+!$omp single
        do k = 1, num_oznlevels
           pin_p(k) = pin(k)
        enddo
+!$omp end single
        do n = 1, num_months
           do j = jts,jte
           do k = 1, num_oznlevels
