@@ -4384,12 +4384,14 @@ module atm_time_integration
 
       ! Avoid FP errors caused by a potential division by zero below by
       ! initializing the "garbage cell" of rho_zz to a non-zero value
+!$omp single
       !$acc parallel default(present)
       !$acc loop gang vector
       do k=1,nVertLevels
          rho_zz(k,nCells+1) = 1.0
       end do
       !$acc end parallel
+!$omp end single
 
       ! compute new density everywhere so we can compute u from ru.
       ! we will also need it to compute theta_m below
@@ -5294,10 +5296,12 @@ module atm_time_integration
          end do
 
 #ifndef MPAS_OPENACC
+!$omp single
          do k=1,nVertLevels
             scalar_old(k,nCells+1) = 0.0_RKIND
             scalar_new(k,nCells+1) = 0.0_RKIND
          end do
+!$omp end single
 #endif
 
          !$acc end parallel
