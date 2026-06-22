@@ -3435,6 +3435,7 @@ module atm_time_integration
       rcv = rgas/(cp-rgas)
       c2 = cp*rcv
 
+!$omp single
       !$acc parallel default(present)
       !$acc loop gang worker
 ! MGD bad to have all threads setting this variable?
@@ -3442,6 +3443,7 @@ module atm_time_integration
          cofrz(k) = rdzw(k)
       end do
       !$acc end parallel
+!$omp end single
 
       !$acc parallel default(present)
       !$acc loop gang worker private(b_tri,c_tri)
