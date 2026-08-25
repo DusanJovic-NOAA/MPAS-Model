@@ -92,7 +92,6 @@ function(mpas_fortran_target target)
     list(APPEND MPAS_FORTRAN_TARGET_COMPILE_DEFINITIONS _MPI=1)
     # Enable OpenMP support
     if(MPAS_OPENMP)
-        list(APPEND MPAS_FORTRAN_TARGET_COMPILE_DEFINITIONS MPAS_OPENMP=1)
         target_link_libraries(${target} PUBLIC OpenMP::OpenMP_Fortran)
     endif()
 
